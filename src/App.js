@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import Clock from "./Clock.js";
+import Winner from "./Winner.js";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import bg from "./imgs/bg1.jpg";
+
+class App extends React.Component {
+    render() {
+        return (
+            <div className="container">
+                <img src={bg} alt="background" title="background" />
+                <Clock />
+                <div className="welcome">
+                    <h2>! 2020 멋쟁이사자처럼 Debuging Contest에 오신 여러분을 환영합니다 !</h2>
+                </div>
+
+                <Winner />
+                
+            </div>
+        );
+    }
 }
-
 export default App;
