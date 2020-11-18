@@ -30,9 +30,9 @@ class Winner extends React.Component {
             localStorage.setItem("winners", JSON.stringify(winner));
         }
 
-        this.setState((current) => ({
+        this.setState({
             winners: JSON.parse(localStorage.getItem("winners")),
-        }));
+        });
     };
 
     render() {

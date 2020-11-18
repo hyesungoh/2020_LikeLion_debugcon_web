@@ -1,70 +1,158 @@
-# Getting Started with Create React App
+## 2020 멋쟁이사자처럼 Debug-Contest를 위한 Web
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+###### 소요시간 : 약 5시간
 
-## Available Scripts
+###### 첫 React 활용이라 기능에 비해 오래 걸린 듯
 
-In the project directory, you can run:
+---
 
-### `npm start`
+### 기능
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+#### 시계
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+-   ##### `state`를 이용하여 시간, 분, 초를 사용
 
-### `npm test`
+```js
+render() {
+    const { hour, minute, second } = this.state;
+    // 시간이 한자리일 때를 삼항연산자로 구분
+    return (
+        <div className="clock">
+            <span className="hour">{hour > 9 ? hour : `0${hour}`}</span>
+            <span>:</span>
+            <span className="minute">
+                {minute > 9 ? minute : `0${minute}`}
+            </span>
+            <span>:</span>
+            <span className="second">
+                {second > 9 ? second : `0${second}`}
+            </span>
+        </div>
+    );
+}
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+-   ##### `constructor`를 이용하여 render 전에 시간, 분, 초를 `state`에 저장
 
-### `npm run build`
+```js
+constructor(props) {
+    super(props);
+    const date = new Date();
+    this.state = {
+        hour: date.getHours(),
+        minute: date.getMinutes(),
+        second: date.getSeconds(),
+    };
+}
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+-   ##### `componentDidMount`를 이용하여 render 후에 `setInterval` 사용
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```js
+componentDidMount() {
+    setInterval(this.getTime, 1000);
+}
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+// setState를 이용하여 자동적으로 render 호출
+getTime = () => {
+    const date = new Date();
+    this.setState({
+        hour: date.getHours(),
+        minute: date.getMinutes(),
+        second: date.getSeconds(),
+    });
+};
+```
 
-### `npm run eject`
+#### 등수
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+-   ##### 등수를 `[{name: "", time: ""}, {}...]` 와 같은 형식으로 사용
+-   ##### `componentDidMount`을 이용하여 input에 `eventListener` 사용
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```js
+componentDidMount() {
+    const winnerForm = document.querySelector("form");
+    winnerForm.addEventListener("submit", this.handleSubmit);
+}
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+handleSubmit = (event) => {
+    // submit 후 새로고침 되는 것을 방지하기 위해
+    event.preventDefault();
+    const input = event.target.querySelector("input");
+    // 작성된 이름
+    const name = input.value;
+    // 작성된 시간
+    const time = new Date().toLocaleTimeString();
+    const tempWinner = { name, time };
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+    // ls에 저장하는 함수 호출
+    this.saveWinner(tempWinner);
+    // input value 초기화
+    input.value = "";
+};
+```
 
-## Learn More
+-   ##### localStorage를 사용하여 새로고침하여도 등수가 남아있게 함
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```js
+saveWinner = (obj) => {
+    const lsWinner = JSON.parse(localStorage.getItem("winners"));
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    if (lsWinner === null) {
+        // 비어있다면 [{}] 형식으로 저장
+        localStorage.setItem("winners", JSON.stringify([obj]));
+    } else {
+        // 비어있지 않다면 concat을 이용하여 새로운 array를 만들어 저장
+        const winner = lsWinner.concat(obj);
+        localStorage.setItem("winners", JSON.stringify(winner));
+    }
 
-### Code Splitting
+    // setState를 이용하여 자동적으로 render 호출 및 저장
+    this.setState({
+        winners: JSON.parse(localStorage.getItem("winners")),
+    });
+};
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- ##### 삼항연산자를 이용하여 데이터가 null, 5 미만 일 때 예외처리
+- ##### map을 이용하여 데이터를 렌더링
+```js
+render() {
+    // ls에 저장된 데이터를 사용
+    const winner_data = JSON.parse(localStorage.getItem("winners"));
 
-### Analyzing the Bundle Size
+    return (
+        <div className="winner">
+            <form>
+                <input type="text" placeholder="다 한 사람 ?"></input>
+            </form>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+            // 비어있을 때 span을 보여줌
+            {winner_data === null ? (
+                <span></span>
+            ) : (
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+                // flex-wrap을 사용하여 데이터가 적을 때 gap이 커지는 것을
+                // 방지하고자 길이에 따라 className을 다르게 할당
+                <div
+                    className={
+                        winner_data.length > 4
+                            ? "winner__list"
+                            : "winner__list__low"
+                    }
+                >
+                    {winner_data.map((e, index) => (
+                        <div className="winner__card" key={index}>
+                            <span className="rank">{index + 1}</span>
+                            <span className="name">{e.name}</span>
+                            <span className="time">{e.time}</span>
+                            <span className="congr">
+                                디버깅 완료 ! 축하드립니다 !!
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+```
