@@ -114,8 +114,9 @@ saveWinner = (obj) => {
 };
 ```
 
-- ##### 삼항연산자를 이용하여 데이터가 null, 5 미만 일 때 예외처리
-- ##### map을 이용하여 데이터를 렌더링
+-   ##### 삼항연산자를 이용하여 데이터가 null, 5 미만 일 때 예외처리
+-   ##### map을 이용하여 데이터를 렌더링
+
 ```js
 render() {
     // ls에 저장된 데이터를 사용
@@ -155,4 +156,37 @@ render() {
             )}
         </div>
     );
+```
+
+#### 남은 시간 계산
+
+-   ##### 종료 시간과 현재 시간을 초로 계산 후 Date 클래스를 생성하는 데 이용
+
+```js
+// 종료 시간 연산
+const endHour = 20,
+    endMinute = 0,
+    endSecond = 0;
+const endTotalSecond = endHour * 60 * 60 + endMinute + endSecond;
+
+// in class ...
+getTime = () => {
+    const date = new Date();
+
+    // 현재 시간 연산
+    const currentTotalSecond =
+        date.getHours() * 60 * 60 + date.getMinutes() * 60 + date.getSeconds();
+    // 남은 시간 연산
+    const leftSecond = endTotalSecond - currentTotalSecond;
+    // 초를 이용하여 date 생성 후 toISOString를 이용하여 문자열로,
+    // substr을 이용하여 슬라이싱
+    const leftTime = new Date(leftSecond * 1000).toISOString().substr(11, 8);
+
+    // 필요한 시간, 분, 초를 setState
+    this.setState({
+        hour: leftTime.slice(0, 2),
+        minute: leftTime.slice(3, 5),
+        second: leftTime.slice(6, 8),
+    });
+};
 ```
