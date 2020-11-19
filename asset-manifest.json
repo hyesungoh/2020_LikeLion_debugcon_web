@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/2020_likelion_debugcon_web/static/css/main.12176767.chunk.css",
-    "main.js": "/2020_likelion_debugcon_web/static/js/main.662468d1.chunk.js",
-    "main.js.map": "/2020_likelion_debugcon_web/static/js/main.662468d1.chunk.js.map",
+    "main.js": "/2020_likelion_debugcon_web/static/js/main.1b0aa696.chunk.js",
+    "main.js.map": "/2020_likelion_debugcon_web/static/js/main.1b0aa696.chunk.js.map",
     "runtime-main.js": "/2020_likelion_debugcon_web/static/js/runtime-main.2b354b53.js",
     "runtime-main.js.map": "/2020_likelion_debugcon_web/static/js/runtime-main.2b354b53.js.map",
     "static/js/2.00c09e9a.chunk.js": "/2020_likelion_debugcon_web/static/js/2.00c09e9a.chunk.js",
@@ -16,6 +16,6 @@
     "static/js/runtime-main.2b354b53.js",
     "static/js/2.00c09e9a.chunk.js",
     "static/css/main.12176767.chunk.css",
-    "static/js/main.662468d1.chunk.js"
+    "static/js/main.1b0aa696.chunk.js"
   ]
 }
